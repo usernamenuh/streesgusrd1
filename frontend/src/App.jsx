@@ -32,6 +32,7 @@ import { SleepForm } from "./components/SleepForm";
 import { LandingPage } from "./components/LandingPage";
 import { AppNavbar } from "./components/AppNavbar";
 import { LoginPage } from "./pages/LoginPage";
+import { InfoPage, infoPages } from "./pages/InfoPage";
 import { auth } from "./firebase";
 const defaultHistoryMeta = {
   page: 1,
@@ -108,6 +109,7 @@ function App() {
   const navigate = useNavigate();
   const isLoginRoute = location.pathname === "/login";
   const isDashboardRoute = location.pathname === "/dashboard";
+  const infoPage = infoPages[location.pathname];
 
   const [currentUser, setCurrentUser] = useState(() => {
     const token = localStorage.getItem("token");
@@ -151,6 +153,10 @@ function App() {
 
     bootstrap();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location.pathname]);
 
   useEffect(() => {
     if (currentUser && localStorage.getItem("token")) {
@@ -402,6 +408,22 @@ function App() {
     }, 100);
   }
 
+  function openDashboard() {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    navigate("/dashboard");
+
+    setTimeout(() => {
+      document.getElementById("dashboard")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+  }
+
   if (isDashboardRoute && !currentUser) {
     return <Navigate to="/login" replace />;
   }
@@ -412,7 +434,7 @@ function App() {
 
   return (
     <div
-      className={`app-shell${isLoginRoute ? " login-shell" : ""}${isDashboardRoute ? " dashboard-shell" : ""}`}
+      className={`app-shell${isLoginRoute ? " login-shell" : ""}${isDashboardRoute ? " dashboard-shell" : ""}${infoPage ? " info-shell" : ""}`}
       id="top"
     >
       {!isLoginRoute && (
@@ -424,7 +446,7 @@ function App() {
         </>
       )}
       <div className={`page-shell${isDashboardRoute ? " dashboard-layout" : ""}`}>
-        {!isLoginRoute && !isDashboardRoute && (
+        {!isLoginRoute && !isDashboardRoute && !infoPage && (
           <AppNavbar
             health={health}
             showApp={isDashboardRoute}
@@ -448,8 +470,14 @@ function App() {
                 onBack={() => navigate("/")}
                 onLoginSuccess={handleLoginSuccess}
               />
+            ) : infoPage ? (
+              <InfoPage page={infoPage} />
             ) : (
-              <LandingPage health={health} onStart={scrollToAssessment} />
+              <LandingPage
+                health={health}
+                onStart={scrollToAssessment}
+                onDashboard={openDashboard}
+              />
             )
           ) : (
             <>

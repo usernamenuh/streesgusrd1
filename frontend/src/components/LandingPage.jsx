@@ -2,7 +2,7 @@ import { Features } from "./landing/Features";
 import { FAQ } from "./landing/FAQ";
 import { Footer } from "./landing/Footer";
 
-export function LandingPage({ health, onStart }) {
+export function LandingPage({ health, onStart, onDashboard }) {
   return (
     <>
     <section className="landing-section" id="home">
@@ -26,9 +26,9 @@ export function LandingPage({ health, onStart }) {
             Start Assessment
           </button>
 
-          <a href="#dashboard" className="landing-secondary">
+          <button type="button" className="landing-secondary" onClick={onDashboard}>
             View Dashboard
-          </a>
+          </button>
         </div>
       </div>
 

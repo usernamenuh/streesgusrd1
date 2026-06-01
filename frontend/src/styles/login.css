@@ -47,8 +47,9 @@
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
-  background: #f7f7f8;
+  border: 1.5px solid #111111;
+  border-radius: 999px;
+  background: #ffffff;
   color: #111214;
   font-size: 15px;
   font-weight: 950;
